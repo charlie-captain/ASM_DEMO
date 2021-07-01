@@ -16,6 +16,7 @@ targetCompatibility = JavaVersion.VERSION_1_8
 uploadArchives {
     repositories {
         mavenDeployer {
+            // classpath 'com.charlie.plugin:plugin_demo:1.0.0'
             pom.groupId = 'com.charlie.plugin'
             pom.artifactId = 'plugin_demo'
             pom.version = '1.0.0'
