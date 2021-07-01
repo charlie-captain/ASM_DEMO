@@ -2,6 +2,9 @@ package com.charlie.plugin
 
 import org.objectweb.asm.ClassVisitor
 
+/**
+ * 类访问器基类
+ */
 open class BaseClassVisitor(api: Int, classVisitor: ClassVisitor?) : ClassVisitor(api, classVisitor) {
     protected var className: String? = ""
     private var signature: String? = ""

@@ -38,6 +38,7 @@ class DemoTransform : Transform() {
     override fun transform(transformInvocation: TransformInvocation?) {
         super.transform(transformInvocation)
         if (transformInvocation != null) {
+            System.out.println("asdqwe $isIncremental")
             if (!isIncremental) {
                 //全量删掉所有
                 transformInvocation.outputProvider.deleteAll()

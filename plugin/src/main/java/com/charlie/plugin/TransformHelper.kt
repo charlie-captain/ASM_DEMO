@@ -16,7 +16,6 @@ import java.util.jar.JarOutputStream
 object TransformHelper {
 
     fun transformJar(jarInput: JarInput, outputProvider: TransformOutputProvider, isIncremental: Boolean) {
-        System.out.println("${jarInput.file.name}")
         val destDir = outputProvider.getContentLocation(
             jarInput.name,
             jarInput.contentTypes,
@@ -31,7 +30,6 @@ object TransformHelper {
         val sourceFile = directoryInput.file
         val name = sourceFile.name
         val destDir = outputProvider.getContentLocation(name, directoryInput.contentTypes, directoryInput.scopes, Format.DIRECTORY)
-        System.out.println("TransformHelper[transformDirectory], name = $name, sourceFile Path = ${sourceFile.absolutePath}, destFile Path = ${destDir.absolutePath}, isIncremental = $isIncremental")
         if (isIncremental) {
             val changeFiles = directoryInput.changedFiles
             for (changeFile in changeFiles) {
@@ -39,7 +37,6 @@ object TransformHelper {
                 val inputFile = changeFile.key
                 val destPath = inputFile.absolutePath.replace(sourceFile.absolutePath, destDir.absolutePath)
                 val destFile = File(destPath)
-                System.out.println("目录：$destPath，状态：$status")
                 when (status) {
                     Status.NOTCHANGED -> {
 
@@ -67,7 +64,6 @@ object TransformHelper {
     private fun handleDirectory(sourceFile: File, destDir: File) {
         val files = sourceFile.listFiles { file, name ->
             val realFile = File(file, name)
-            println("asdqwe filter $file,  $name ,$realFile isEnd =${name.endsWith(".class")}, ${realFile.isDirectory}  ${realFile.isFile}")
             if (realFile.isDirectory && !realFile.isFile) {
                 true
             } else {
@@ -75,11 +71,9 @@ object TransformHelper {
             }
         }
 
-        System.out.println("handleDirectory files = ${files.map { it.name }}, destDir = ${destDir.name}")
         for (file in files) {
             try {
                 val destFile = File(destDir, file.name)
-                System.out.println("modifile class ${file.name}  dest ${destFile.name} ${file.isDirectory}")
                 if (file.isDirectory) {
                     handleDirectory(file, destFile)
                 } else if (file.name.endsWith(".class")) {
@@ -88,7 +82,7 @@ object TransformHelper {
                     var modifyBytes: ByteArray? = null
                     if (!file.name.contains("BuildConfig")) {
                         modifyBytes = sourceBytes?.let {
-                            modifyClass(file, it)
+                            modifyClass(it)
                         }
                     }
                     if (modifyBytes != null) {
@@ -106,7 +100,6 @@ object TransformHelper {
     private fun handleJarFile(jarInput: JarInput, destFile: File) {
         // 空的 jar 包不进行处理
         if (jarInput.file == null || jarInput.file.length() == 0L) {
-            System.out.println("handleJarFile, ${jarInput.file.absolutePath} is null")
             return
         }
         // 构建 JarFile 文件
@@ -126,7 +119,7 @@ object TransformHelper {
             var modifyClassBytes: ByteArray? = null
             val destClassBytes = readBytes(inputStream)
             if (!jarEntry.isDirectory && entryName.endsWith(".class") && !entryName.startsWith("android")) {
-                modifyClassBytes = destClassBytes?.let { modifyClass(jarInput.file, it) }
+                modifyClassBytes = destClassBytes?.let { modifyClass(it) }
             }
 
             if (modifyClassBytes != null) {
@@ -141,8 +134,7 @@ object TransformHelper {
         modifyJar.close()
     }
 
-    private fun modifyClass(file: File, sourceBytes: ByteArray): ByteArray? {
-        println("asdqwe ${file.absolutePath}  ${file.name}")
+    private fun modifyClass(sourceBytes: ByteArray): ByteArray? {
         try {
             val classReader = ClassReader(sourceBytes)
             val classWriter = ClassWriter(classReader, ClassWriter.COMPUTE_MAXS)
@@ -150,7 +142,7 @@ object TransformHelper {
             classReader.accept(classVisitor, ClassReader.SKIP_DEBUG)
             return classWriter.toByteArray()
         } catch (exception: Exception) {
-            System.out.println("modify class exception = ${exception.printStackTrace()}")
+            exception.printStackTrace()
         }
         return null
     }

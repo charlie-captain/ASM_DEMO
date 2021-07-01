@@ -35,25 +35,24 @@ class MeasureMethodCostTimeInterceptor(
         if (name == "<init>") {
             return
         }
-        mv.visitMethodInsn(INVOKESTATIC, "java/lang/System", "currentTimeMillis", "()J", false);
-        mv.visitVarInsn(LLOAD, startId);
-        mv.visitInsn(LSUB);
+        mv.visitMethodInsn(INVOKESTATIC, "java/lang/System", "currentTimeMillis", "()J", false)
+        mv.visitVarInsn(LLOAD, startId)
+        mv.visitInsn(LSUB)
         val endId = newLocal(Type.LONG_TYPE)
-        mv.visitVarInsn(LSTORE, endId);
-
-        mv.visitLdcInsn(className);
-        mv.visitTypeInsn(NEW, "java/lang/StringBuilder");
-        mv.visitInsn(DUP);
-        mv.visitMethodInsn(INVOKESPECIAL, "java/lang/StringBuilder", "<init>", "()V", false);
-        mv.visitLdcInsn(name + ": cost = ");
-        mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/StringBuilder", "append", "(Ljava/lang/String;)Ljava/lang/StringBuilder;", false);
-        mv.visitVarInsn(LLOAD, endId);
-        mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/StringBuilder", "append", "(J)Ljava/lang/StringBuilder;", false);
-        mv.visitIntInsn(BIPUSH, 32);
-        mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/StringBuilder", "append", "(C)Ljava/lang/StringBuilder;", false);
-        mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/StringBuilder", "toString", "()Ljava/lang/String;", false);
-        mv.visitMethodInsn(INVOKESTATIC, "android/util/Log", "d", "(Ljava/lang/String;Ljava/lang/String;)I", false);
-        mv.visitInsn(POP);
+        mv.visitVarInsn(LSTORE, endId)
+        mv.visitLdcInsn(className)
+        mv.visitTypeInsn(NEW, "java/lang/StringBuilder")
+        mv.visitInsn(DUP)
+        mv.visitMethodInsn(INVOKESPECIAL, "java/lang/StringBuilder", "<init>", "()V", false)
+        mv.visitLdcInsn(name + ": cost = ")
+        mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/StringBuilder", "append", "(Ljava/lang/String;)Ljava/lang/StringBuilder;", false)
+        mv.visitVarInsn(LLOAD, endId)
+        mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/StringBuilder", "append", "(J)Ljava/lang/StringBuilder;", false)
+        mv.visitIntInsn(BIPUSH, 32)
+        mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/StringBuilder", "append", "(C)Ljava/lang/StringBuilder;", false)
+        mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/StringBuilder", "toString", "()Ljava/lang/String;", false)
+        mv.visitMethodInsn(INVOKESTATIC, "android/util/Log", "d", "(Ljava/lang/String;Ljava/lang/String;)I", false)
+        mv.visitInsn(POP)
 
     }
 }
