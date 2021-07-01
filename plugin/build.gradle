@@ -1,0 +1,26 @@
+apply plugin: 'kotlin'
+apply plugin: 'groovy'
+apply plugin: 'maven'
+apply plugin: 'java-library'
+
+
+dependencies {
+    implementation gradleApi()
+    implementation localGroovy()
+    implementation 'com.android.tools.build:gradle:3.6.2'
+}
+
+sourceCompatibility = JavaVersion.VERSION_1_8
+targetCompatibility = JavaVersion.VERSION_1_8
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            pom.groupId = 'com.charlie.plugin'
+            pom.artifactId = 'plugin_demo'
+            pom.version = '1.0.0'
+            //生成的插件存放地址
+            repository(url: uri("../repo"))
+        }
+    }
+}
