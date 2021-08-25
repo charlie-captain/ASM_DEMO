@@ -31,6 +31,7 @@ object TransformHelper {
         val name = sourceFile.name
         val destDir = outputProvider.getContentLocation(name, directoryInput.contentTypes, directoryInput.scopes, Format.DIRECTORY)
         if (isIncremental) {
+            //增量处理
             val changeFiles = directoryInput.changedFiles
             for (changeFile in changeFiles) {
                 val status = changeFile.value
@@ -62,6 +63,7 @@ object TransformHelper {
 
 
     private fun handleDirectory(sourceFile: File, destDir: File) {
+        //过滤剩下 文件夹 / class文件
         val files = sourceFile.listFiles { file, name ->
             val realFile = File(file, name)
             if (realFile.isDirectory && !realFile.isFile) {
@@ -75,6 +77,7 @@ object TransformHelper {
             try {
                 val destFile = File(destDir, file.name)
                 if (file.isDirectory) {
+                    //递归
                     handleDirectory(file, destFile)
                 } else if (file.name.endsWith(".class")) {
                     val fileInputStream = FileInputStream(file)

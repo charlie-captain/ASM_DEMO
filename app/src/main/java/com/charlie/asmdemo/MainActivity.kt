@@ -3,6 +3,7 @@ package com.charlie.asmdemo
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.widget.TextView
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -19,9 +20,8 @@ class MainActivity : AppCompatActivity() {
 
 
     fun testAsmLog() {
-//        val start  = System.currentTimeMillis()
-//        val cost = System.currentTimeMillis() - start
-//        Log.d("test","testAsmLog cost = $cost ")
-        Thread.sleep(2000)
+        val start  = System.currentTimeMillis()
+        val cost = System.currentTimeMillis() - start
+        Log.d("test","testAsmLog cost = $cost ")
     }
 }

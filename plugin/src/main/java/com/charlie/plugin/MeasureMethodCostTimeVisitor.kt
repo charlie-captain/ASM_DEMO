@@ -7,7 +7,7 @@ import org.objectweb.asm.commons.AdviceAdapter
 /**
  * 方法耗时
  */
-class MeasureMethodCostTimeInterceptor(
+class MeasureMethodCostTimeVisitor(
     var className: String?, methodVisitor:MethodVisitor,
     access: Int,
     name: String?,
@@ -18,11 +18,11 @@ class MeasureMethodCostTimeInterceptor(
 
     override fun onMethodEnter() {
         super.onMethodEnter()
-
         if (name == "<init>") {
             //跳过构造
             return
         }
+        println("onMethod Enter: $className, name = $name")
         mv.visitMethodInsn(INVOKESTATIC, "java/lang/System", "currentTimeMillis", "()J", false);
         startId = newLocal(Type.LONG_TYPE)
         mv.visitVarInsn(LSTORE, startId)
@@ -35,6 +35,7 @@ class MeasureMethodCostTimeInterceptor(
         if (name == "<init>") {
             return
         }
+        println("onMethod Exit: $className, name = $name")
         mv.visitMethodInsn(INVOKESTATIC, "java/lang/System", "currentTimeMillis", "()J", false)
         mv.visitVarInsn(LLOAD, startId)
         mv.visitInsn(LSUB)

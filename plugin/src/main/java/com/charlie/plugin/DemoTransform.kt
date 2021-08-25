@@ -38,18 +38,18 @@ class DemoTransform : Transform() {
     override fun transform(transformInvocation: TransformInvocation?) {
         super.transform(transformInvocation)
         if (transformInvocation != null) {
-            System.out.println("asdqwe $isIncremental")
             if (!isIncremental) {
                 //全量删掉所有
                 transformInvocation.outputProvider.deleteAll()
             }
+            //处理输入的文件夹和jars
             transformInvocation.inputs.forEach { transformInput ->
                 System.out.println("handle directory ${transformInput.directoryInputs.size}")
                 transformInput.directoryInputs.forEach {
                     TransformHelper.transformDirectory(it, transformInvocation.outputProvider, transformInvocation.isIncremental)
                 }
-                //jar
                 System.out.println("handle jars ${transformInput.jarInputs.size}")
+                //jar暂时不处理，只是复制文件
                 transformInput.jarInputs.forEach {
                     TransformHelper.transformJar(it, transformInvocation.outputProvider, transformInvocation.isIncremental)
                 }
